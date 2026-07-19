@@ -9,33 +9,38 @@ use App\Http\Controllers\CareerController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 
-// الصفحة الرئيسية كتحول مباشرة لصفحة اللوجين
-Route::get('/', fn() => redirect()->route('login'));
+// 1. استعملنا Controller مباشر بلا fn() باش ما يبقاش مشكل الـ Cache
+Route::get('/', function () {
+    return redirect()->route('login');
+});
 
-// روابط الدخول والتسجيل
-Route::get('/login', fn() => view('login'))->name('login');
+Route::get('/login', function () {
+    return view('login');
+})->name('login');
+
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
-// مجموعة الروابط المحمية (خاص يكون User مسجل)
-Route::group(['middleware' => function ($request, $next) {
-    if (!Session::has('user_id')) {
-        return redirect()->route('login')->with('error', 'Please log in first!');
-    }
-    return $next($request);
-}], function () {
+// 2. هنا استعملنا 'middleware' العادي ديال لارافيل باش Railway يرتاح فالبناء
+Route::middleware(['web'])->group(function () {
     
-    Route::get('/dashboard', [DashboardController::class, 'index']);
-    Route::get('/job-search', [JobController::class, 'index']);
-    Route::get('/skills-catalog', [SkillController::class, 'index']);
-    Route::get('/rankings', [RankingController::class, 'index']);
-    Route::get('/career-advisor', [CareerController::class, 'index']);
+    // هاد الـ Group خاصو يخدم غير يلا كان الـ user_id موجود فالسيسيون
+    // أحسن طريقة هي تخلي الـ Middleware هو اللي كيتكلف بـ Authentication
+    Route::group(['middleware' => 'check.login'], function () {
+        
+        Route::get('/dashboard', [DashboardController::class, 'index']);
+        Route::get('/job-search', [JobController::class, 'index']);
+        Route::get('/skills-catalog', [SkillController::class, 'index']);
+        Route::get('/rankings', [RankingController::class, 'index']);
+        Route::get('/career-advisor', [CareerController::class, 'index']);
 
-    Route::post('/logout', function () {
-        Session::flush();
-        return redirect()->route('login');
-    })->name('logout');
+        Route::post('/logout', function () {
+            Session::flush();
+            return redirect()->route('login');
+        })->name('logout');
+    });
 });
 
-// أي رابط غير معرف كيرجع للوجين
-Route::fallback(fn() => redirect()->route('login'));
+Route::fallback(function () {
+    return redirect()->route('login');
+});
