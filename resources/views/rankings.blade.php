@@ -17,16 +17,15 @@
         }
     </style>
 </head>
-<body class="text-[#4a0404] font-sans p-6 md:p-12">
+<body class="text-[#4a0404] font-sans p-4 sm:p-6 md:p-12">
 
-    <!-- Top Bar المستقل (فوق الـ Navbar) -->
-<div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-3 mb-4">
-   
-
-    <!-- Bienvenue + الاسم على اليمين -->
-    <div class="!text-xl font-bold text-[#56161D]">
-    Bienvenue, {{ Session::get('user_name', 'Utilisateur') }}
-</div>
+    <!-- Top Bar المستقل المتجاوب -->
+<div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 px-4 sm:px-6 py-3 mb-4">
+    <!-- Bienvenue -->
+    <div class="text-lg sm:text-xl font-bold text-[#56161D] text-center sm:text-left">
+        Bienvenue, {{ Session::get('user_name', 'Utilisateur') }}
+    </div>
+     <!-- Se déconnecter -->
      <form action="/logout" method="POST" class="inline">
         @csrf
         <button type="submit" class="border border-red-300 text-red-600 px-4 py-1 rounded-full text-sm font-semibold hover:bg-red-50 transition-all">
@@ -35,11 +34,11 @@
     </form>
 </div>
 
-<!-- الـ Navbar الأساسي (اللوغو والروابط) -->
-<nav class="max-w-7xl mx-auto mb-6 glass-card px-6 py-4 rounded-2xl flex justify-between items-center">
+<!-- الـ Navbar الأساسي المتجاوب -->
+<nav class="max-w-7xl mx-auto mb-6 glass-card px-4 sm:px-6 py-4 rounded-2xl flex flex-col lg:flex-row justify-between items-center gap-4">
     <div class="font-serif italic text-xl font-bold tracking-wider">Skillora</div>
     
-    <div class="flex gap-6 text-sm font-medium">
+    <div class="flex flex-wrap justify-center gap-3 sm:gap-6 text-xs sm:text-sm font-medium">
         <a href="/dashboard" class="{{ request()->is('dashboard') ? 'border-b-2 border-[#4a0404] pb-1 font-bold' : 'hover:text-[#4a0404]/60' }}">Dashboard</a>
         <a href="/job-search" class="{{ request()->is('job-search') ? 'border-b-2 border-[#4a0404] pb-1 font-bold' : 'hover:text-[#4a0404]/60' }}">Jobs</a>
         <a href="/skills-catalog" class="{{ request()->is('skills-catalog') ? 'border-b-2 border-[#4a0404] pb-1 font-bold' : 'hover:text-[#4a0404]/60' }}">Skills</a>
@@ -50,12 +49,11 @@
 
     <div class="max-w-7xl mx-auto">
         <!-- Header -->
-        <header class="mb-10 flex justify-between items-center border-b border-[#4a0404]/10 pb-6">
+        <header class="mb-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-[#4a0404]/10 pb-6">
             <div>
-                <h1 class="text-5xl font-serif italic text-[#4a0404]">Analytics & Rankings</h1>
-                <p class="text-[#4a0404]/60 tracking-widest text-xs uppercase mt-2">Analyses graphiques et comparaisons globales du marché</p>
+                <h1 class="text-3xl sm:text-5xl font-serif italic text-[#4a0404]">Analytics & Rankings</h1>
+                <p class="text-[#4a0404]/60 tracking-widest text-[10px] sm:text-xs uppercase mt-2">Analyses graphiques et comparaisons globales du marché</p>
             </div>
-            
         </header>
 
         <!-- GRID 1: Top Métiers & Top Compétences -->
@@ -63,7 +61,7 @@
             <!-- 1. Top Métiers Chart -->
             <div class="glass-card p-6 rounded-2xl">
                 <h3 class="text-xs font-bold uppercase tracking-wider text-[#4a0404]/70 mb-4">🔥 Top Métiers les plus demandés</h3>
-                <div class="h-64 relative">
+                <div class="h-64 sm:h-80 relative">
                     <canvas id="jobsChart"></canvas>
                 </div>
             </div>
@@ -71,7 +69,7 @@
             <!-- 2. Top Compétences Chart -->
             <div class="glass-card p-6 rounded-2xl">
                 <h3 class="text-xs font-bold uppercase tracking-wider text-[#4a0404]/70 mb-4">🚀 Top Compétences clés requises</h3>
-                <div class="h-64 relative">
+                <div class="h-64 sm:h-80 relative">
                     <canvas id="skillsChart"></canvas>
                 </div>
             </div>
@@ -82,7 +80,7 @@
             <!-- الدائرة د التوزيع د القطاعات -->
             <div class="glass-card p-6 rounded-2xl lg:col-span-1">
                 <h3 class="text-xs font-bold uppercase tracking-wider text-[#4a0404]/70 mb-4">📊 Répartition des domaines</h3>
-                <div class="h-64 relative flex justify-center">
+                <div class="h-64 sm:h-80 relative flex justify-center">
                     <canvas id="domainsPieChart"></canvas>
                 </div>
             </div>
@@ -91,7 +89,7 @@
             <div class="glass-card p-6 rounded-2xl lg:col-span-2">
                 <h3 class="text-xs font-bold uppercase tracking-wider text-[#4a0404]/70 mb-4">⚖️ Comparaison analytique entre domaines</h3>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm text-[#4a0404]">
+                    <table class="w-full text-left text-sm text-[#4a0404] min-w-[350px]">
                         <thead>
                             <tr class="border-b border-[#4a0404]/10 text-xs uppercase tracking-wider opacity-60">
                                 <th class="pb-3">Domaine / Secteur</th>

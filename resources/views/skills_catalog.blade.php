@@ -17,17 +17,15 @@
         }
     </style>
 </head>
-<body class="text-[#4a0404] font-sans p-6 md:p-12">
+<body class="text-[#4a0404] font-sans p-4 sm:p-6 md:p-12">
 
-    <!-- Top Bar المستقل (فوق الـ Navbar) -->
-<div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-3 mb-4">
-    <!-- Se déconnecter على اليسار -->
-   
-
-    <!-- Bienvenue + الاسم على اليمين -->
-    <div class="!text-xl font-bold text-[#56161D]">
-    Bienvenue, {{ Session::get('user_name', 'Utilisateur') }}
-</div>
+    <!-- Top Bar المستقل المتجاوب -->
+<div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 px-4 sm:px-6 py-3 mb-4">
+    <!-- Bienvenue -->
+    <div class="text-lg sm:text-xl font-bold text-[#56161D] text-center sm:text-left">
+        Bienvenue, {{ Session::get('user_name', 'Utilisateur') }}
+    </div>
+     <!-- Se déconnecter -->
      <form action="/logout" method="POST" class="inline">
         @csrf
         <button type="submit" class="border border-red-300 text-red-600 px-4 py-1 rounded-full text-sm font-semibold hover:bg-red-50 transition-all">
@@ -36,11 +34,11 @@
     </form>
 </div>
 
-<!-- الـ Navbar الأساسي (اللوغو والروابط) -->
-<nav class="max-w-7xl mx-auto mb-6 glass-card px-6 py-4 rounded-2xl flex justify-between items-center">
+<!-- الـ Navbar الأساسي المتجاوب -->
+<nav class="max-w-7xl mx-auto mb-6 glass-card px-4 sm:px-6 py-4 rounded-2xl flex flex-col lg:flex-row justify-between items-center gap-4">
     <div class="font-serif italic text-xl font-bold tracking-wider">Skillora</div>
     
-    <div class="flex gap-6 text-sm font-medium">
+    <div class="flex flex-wrap justify-center gap-3 sm:gap-6 text-xs sm:text-sm font-medium">
         <a href="/dashboard" class="{{ request()->is('dashboard') ? 'border-b-2 border-[#4a0404] pb-1 font-bold' : 'hover:text-[#4a0404]/60' }}">Dashboard</a>
         <a href="/job-search" class="{{ request()->is('job-search') ? 'border-b-2 border-[#4a0404] pb-1 font-bold' : 'hover:text-[#4a0404]/60' }}">Jobs</a>
         <a href="/skills-catalog" class="{{ request()->is('skills-catalog') ? 'border-b-2 border-[#4a0404] pb-1 font-bold' : 'hover:text-[#4a0404]/60' }}">Skills</a>
@@ -48,12 +46,13 @@
         <a href="/career-advisor" class="{{ request()->is('career-advisor') ? 'border-b-2 border-[#4a0404] pb-1 font-bold' : 'hover:text-[#4a0404]/60' }}">Career Advisor</a>
     </div>
 </nav>
+
     <div class="max-w-7xl mx-auto">
         <!-- Header -->
-        <header class="mb-10 flex justify-between items-center border-b border-[#4a0404]/10 pb-6">
+        <header class="mb-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-[#4a0404]/10 pb-6">
             <div>
-                <h1 class="text-5xl font-serif italic text-[#4a0404]">Catalogue des Compétences</h1>
-                <p class="text-[#4a0404]/60 tracking-widest text-xs uppercase mt-2">Analyse d'impact et pénétration des compétences</p>
+                <h1 class="text-3xl sm:text-5xl font-serif italic text-[#4a0404]">Catalogue des Compétences</h1>
+                <p class="text-[#4a0404]/60 tracking-widest text-[10px] sm:text-xs uppercase mt-2">Analyse d'impact et pénétration des compétences</p>
             </div>
         </header>
 
@@ -64,7 +63,7 @@
                     <label class="text-xs uppercase font-bold tracking-wider text-[#4a0404]/60 block mb-1">Sélectionner une compétence :</label>
                 </div>
                 <div class="w-full sm:flex-1">
-                    <select name="skill_id" onchange="document.getElementById('skillForm').submit()" class="w-full p-3 rounded-xl border border-[#4a0404]/20 bg-white/60 text-lg font-serif italic focus:outline-[#4a0404]">
+                    <select name="skill_id" onchange="document.getElementById('skillForm').submit()" class="w-full p-3 rounded-xl border border-[#4a0404]/20 bg-white/60 text-base sm:text-lg font-serif italic focus:outline-[#4a0404]">
                         @foreach($skills as $skill)
                             <option value="{{ $skill->id_skill }}" {{ $selectedSkillId == $skill->id_skill ? 'selected' : '' }}>
                                 {{ $skill->skill_name }}
@@ -76,8 +75,8 @@
         </div>
 
         @if($skillDetails)
-        <!-- GRID 1: الكارطات السريعة (النسبة، الطلب، الصعوبة) -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <!-- GRID 1: الكارطات السريعة -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-8">
             <div class="glass-card p-6 rounded-2xl text-center">
                 <h3 class="text-[10px] font-bold uppercase tracking-widest text-[#4a0404]/50">Taux d'Apparition</h3>
                 <p class="text-3xl font-serif italic mt-2">{{ $percentage }}%</p>
@@ -107,7 +106,7 @@
             <!-- 1. الـ Trend Chart -->
             <div class="glass-card p-6 rounded-2xl lg:col-span-2">
                 <h3 class="text-xs font-bold uppercase tracking-wider text-[#4a0404]/70 mb-4">Skill Trend (Évolution de la demande)</h3>
-                <div class="h-64 relative">
+                <div class="h-64 sm:h-80 relative">
                     <canvas id="trendChart"></canvas>
                 </div>
             </div>
@@ -138,8 +137,8 @@
             </div>
         </div>
 
-        <!-- GRID 3: التفاصيل (الشركات، المهارات المصاحبة، الوظائف، والقطاعات) -->
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <!-- GRID 3: التفاصيل -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <!-- توب الشركات -->
             <div class="glass-card p-5 rounded-2xl">
                 <h4 class="text-xs font-bold uppercase tracking-wider text-[#4a0404]/70 mb-3 border-b border-[#4a0404]/10 pb-1">Top Companies</h4>
@@ -206,13 +205,12 @@
         @endif
     </div>
 
-    <!-- كود الـ Chart المطور د الـ Trend غايكون ديناميكي على حساب قوة المهارة -->
+    <!-- كود الـ Chart -->
     @if($skillDetails)
     <script>
         const ctx = document.getElementById('trendChart').getContext('2d');
         const baseDemand = {{ $jobsCount }};
         
-        // خوارزمية ذكية باش نصنعو Trend جرافيك كيشبه للواقع بناءً على حجم داتا المهارة الحقيقية
         const trendData = [
             Math.round(baseDemand * 0.7),
             Math.round(baseDemand * 0.85),

@@ -27,16 +27,14 @@
         }
     </style>
 </head>
-<body class="text-[#4a0404] font-sans p-6 md:p-12">
-  <!-- Top Bar المستقل (فوق الـ Navbar) -->
-<div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-3 mb-4">
-    <!-- Se déconnecter على اليسار -->
-    
-
-    <!-- Bienvenue + الاسم على اليمين -->
-    <div class="!text-xl font-bold text-[#56161D]">
-    Bienvenue, {{ Session::get('user_name', 'Utilisateur') }}
-</div>
+<body class="text-[#4a0404] font-sans p-4 sm:p-6 md:p-12">
+  <!-- Top Bar المتجاوب -->
+<div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 px-4 sm:px-6 py-3 mb-4">
+    <!-- Bienvenue -->
+    <div class="text-lg sm:text-xl font-bold text-[#56161D] text-center sm:text-left">
+        Bienvenue, {{ Session::get('user_name', 'Utilisateur') }}
+    </div>
+    <!-- Se déconnecter -->
     <form action="/logout" method="POST" class="inline">
         @csrf
         <button type="submit" class="border border-red-300 text-red-600 px-4 py-1 rounded-full text-sm font-semibold hover:bg-red-50 transition-all">
@@ -45,11 +43,11 @@
     </form>
 </div>
 
-<!-- الـ Navbar الأساسي (اللوغو والروابط) -->
-<nav class="max-w-7xl mx-auto mb-6 glass-card px-6 py-4 rounded-2xl flex justify-between items-center">
+<!-- الـ Navbar الأساسي المتجاوب -->
+<nav class="max-w-7xl mx-auto mb-6 glass-card px-4 sm:px-6 py-4 rounded-2xl flex flex-col lg:flex-row justify-between items-center gap-4">
     <div class="font-serif italic text-xl font-bold tracking-wider">Skillora</div>
     
-    <div class="flex gap-6 text-sm font-medium">
+    <div class="flex flex-wrap justify-center gap-3 sm:gap-6 text-xs sm:text-sm font-medium">
         <a href="/dashboard" class="{{ request()->is('dashboard') ? 'border-b-2 border-[#4a0404] pb-1 font-bold' : 'hover:text-[#4a0404]/60' }}">Dashboard</a>
         <a href="/job-search" class="{{ request()->is('job-search') ? 'border-b-2 border-[#4a0404] pb-1 font-bold' : 'hover:text-[#4a0404]/60' }}">Jobs</a>
         <a href="/skills-catalog" class="{{ request()->is('skills-catalog') ? 'border-b-2 border-[#4a0404] pb-1 font-bold' : 'hover:text-[#4a0404]/60' }}">Skills</a>
@@ -57,20 +55,19 @@
         <a href="/career-advisor" class="{{ request()->is('career-advisor') ? 'border-b-2 border-[#4a0404] pb-1 font-bold' : 'hover:text-[#4a0404]/60' }}">Career Advisor</a>
     </div>
 </nav>
+
     <div class="max-w-7xl mx-auto">
         <!-- Header -->
-<header class="mb-10 flex justify-between items-center border-b border-[#4a0404]/10 pb-6">
+<header class="mb-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-[#4a0404]/10 pb-6">
     <div>
         @if(request()->is('dashboard'))
-            <h1 class="text-5xl font-serif italic text-[#4a0404]">Skillora Dashboard</h1>
-            <p class="text-[#4a0404]/60 tracking-widest text-xs uppercase mt-2">Analyse Avancée du Marché d'Emploi & Compétences</p>
+            <h1 class="text-3xl sm:text-5xl font-serif italic text-[#4a0404]">Skillora Dashboard</h1>
+            <p class="text-[#4a0404]/60 tracking-widest text-[10px] sm:text-xs uppercase mt-2">Analyse Avancée du Marché d'Emploi & Compétences</p>
         @else
-            <h1 class="text-5xl font-serif italic text-[#4a0404]">Offres d'Emploi</h1>
-            <p class="text-[#4a0404]/60 tracking-widest text-xs uppercase mt-2">Trouvez votre opportunité idéale</p>
+            <h1 class="text-3xl sm:text-5xl font-serif italic text-[#4a0404]">Offres d'Emploi</h1>
+            <p class="text-[#4a0404]/60 tracking-widest text-[10px] sm:text-xs uppercase mt-2">Trouvez votre opportunité idéale</p>
         @endif
     </div>
-    
-   
 </header>
 
         <!-- Formulaire de Filtres -->
@@ -139,18 +136,18 @@
     </div>
 
     <!-- MODAL DETAILS (Pop-up تفاعلي) -->
-    <div id="jobModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/20 hidden backdrop-blur-sm">
-        <div class="glass-modal w-full max-w-2xl p-8 rounded-3xl mx-4 border border-[#4a0404]/20 max-h-[85vh] overflow-y-auto text-[#4a0404]">
+    <div id="jobModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/20 hidden backdrop-blur-sm p-4">
+        <div class="glass-modal w-full max-w-2xl p-6 sm:p-8 rounded-3xl mx-auto border border-[#4a0404]/20 max-h-[85vh] overflow-y-auto text-[#4a0404]">
             <div class="flex justify-between items-start border-b border-[#4a0404]/10 pb-4">
                 <div>
                     <span id="modalCompany" class="text-xs font-bold uppercase tracking-widest text-[#4a0404]/60"></span>
-                    <h2 id="modalTitle" class="text-3xl font-serif italic font-bold mt-1"></h2>
+                    <h2 id="modalTitle" class="text-2xl sm:text-3xl font-serif italic font-bold mt-1"></h2>
                 </div>
                 <button onclick="closeJobModal()" class="text-2xl font-light hover:opacity-70">&times;</button>
             </div>
 
             <div class="mt-6 space-y-4">
-                <div class="flex gap-4 text-xs">
+                <div class="flex flex-wrap gap-4 text-xs">
                     <p><strong>Secteur:</strong> <span id="modalDomain" class="px-2 py-0.5 bg-[#4a0404]/10 rounded"></span></p>
                     <p><strong>Ville:</strong> <span class="px-2 py-0.5 bg-[#4a0404]/10 rounded">Maroc</span></p>
                 </div>

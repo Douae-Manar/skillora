@@ -16,17 +16,15 @@
         }
     </style>
 </head>
-<body class="text-[#4a0404] font-sans p-6 md:p-12">
+<body class="text-[#4a0404] font-sans p-4 sm:p-6 md:p-12">
 
-    <!-- Top Bar المستقل (فوق الـ Navbar) -->
-<div class="max-w-7xl mx-auto flex justify-between items-center px-8 py-4 mb-4">
-    <!-- Se déconnecter على اليسار -->
-    
-
-    <!-- Bienvenue + الاسم على اليمين -->
-   <div class="!text-xl font-bold text-[#56161D]">
-    Bienvenue, {{ Session::get('user_name', 'Utilisateur') }}
-</div>
+    <!-- Top Bar المستقل متجاوب -->
+<div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 px-4 sm:px-8 py-4 mb-4">
+    <!-- Bienvenue -->
+    <div class="text-lg sm:text-xl font-bold text-[#56161D] text-center sm:text-left">
+        Bienvenue, {{ Session::get('user_name', 'Utilisateur') }}
+    </div>
+    <!-- Se déconnecter -->
     <form action="/logout" method="POST" class="inline">
         @csrf
        <button type="submit" class="border border-red-300 text-red-600 px-4 py-1 rounded-full text-sm font-semibold hover:bg-red-50 transition-all">
@@ -35,11 +33,11 @@
     </form>
 </div>
 
-<!-- الـ Navbar الأساسي (اللوغو والروابط) -->
-<nav class="max-w-7xl mx-auto mb-6 glass-card px-6 py-4 rounded-2xl flex justify-between items-center">
+<!-- الـ Navbar الأساسي المتجاوب -->
+<nav class="max-w-7xl mx-auto mb-6 glass-card px-4 sm:px-6 py-4 rounded-2xl flex flex-col lg:flex-row justify-between items-center gap-4">
     <div class="font-serif italic text-xl font-bold tracking-wider">Skillora</div>
     
-    <div class="flex gap-6 text-sm font-medium">
+    <div class="flex flex-wrap justify-center gap-3 sm:gap-6 text-xs sm:text-sm font-medium">
         <a href="/dashboard" class="{{ request()->is('dashboard') ? 'border-b-2 border-[#4a0404] pb-1 font-bold' : 'hover:text-[#4a0404]/60' }}">Dashboard</a>
         <a href="/job-search" class="{{ request()->is('job-search') ? 'border-b-2 border-[#4a0404] pb-1 font-bold' : 'hover:text-[#4a0404]/60' }}">Jobs</a>
         <a href="/skills-catalog" class="{{ request()->is('skills-catalog') ? 'border-b-2 border-[#4a0404] pb-1 font-bold' : 'hover:text-[#4a0404]/60' }}">Skills</a>
@@ -47,12 +45,13 @@
         <a href="/career-advisor" class="{{ request()->is('career-advisor') ? 'border-b-2 border-[#4a0404] pb-1 font-bold' : 'hover:text-[#4a0404]/60' }}">Career Advisor</a>
     </div>
 </nav>
+
     <div class="max-w-7xl mx-auto">
         <!-- Header -->
-        <header class="mb-10 flex justify-between items-center border-b border-[#4a0404]/10 pb-6">
+        <header class="mb-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-[#4a0404]/10 pb-6">
             <div>
-                <h1 class="text-5xl font-serif italic text-[#4a0404]">🎯 Career Advisor</h1>
-                <p class="text-[#4a0404]/60 tracking-widest text-xs uppercase mt-2">Analyses bidirectionnelles et stratégiques</p>
+                <h1 class="text-3xl sm:text-5xl font-serif italic text-[#4a0404]">🎯 Career Advisor</h1>
+                <p class="text-[#4a0404]/60 tracking-widest text-[10px] sm:text-xs uppercase mt-2">Analyses bidirectionnelles et stratégiques</p>
             </div>
         </header>
 
@@ -86,9 +85,9 @@
         <!-- ==================== [1] تحليلات الـ MÉTIER ==================== -->
         @if($selectedTitle && $jobStats)
         <div class="space-y-8 animate-fade-in">
-            <div class="glass-card p-8 rounded-3xl border-l-4 border-[#4a0404] bg-white/50">
-                <h2 class="text-3xl font-serif italic font-bold">🎯 {{ $selectedTitle }}</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mt-4 text-xs">
+            <div class="glass-card p-6 sm:p-8 rounded-3xl border-l-4 border-[#4a0404] bg-white/50">
+                <h2 class="text-2xl sm:text-3xl font-serif italic font-bold">🎯 {{ $selectedTitle }}</h2>
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 mt-4 text-xs">
                     <div><p class="opacity-50 font-bold uppercase">Offres</p><p class="text-xl font-bold mt-1">{{ $jobStats['count'] }}</p></div>
                     <div><p class="opacity-50 font-bold uppercase">Demande</p><p class="text-sm font-bold text-amber-900 mt-1">{{ $jobStats['demand'] }}</p></div>
                     <div><p class="opacity-50 font-bold uppercase">Secteur</p><p class="font-medium mt-1 uppercase">{{ $jobStats['domain'] }}</p></div>
@@ -98,9 +97,9 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div class="glass-card p-6 rounded-2xl lg:col-span-2">
+                <div class="glass-card p-6 rounded-2xl lg:col-span-2 overflow-x-auto">
                     <h3 class="text-xs font-bold uppercase tracking-wider mb-4 border-b border-[#4a0404]/10 pb-2">🔥 2. Les compétences obligatoires</h3>
-                    <table class="w-full text-left text-xs">
+                    <table class="w-full text-left text-xs min-w-[300px]">
                         <tbody class="divide-y divide-[#4a0404]/5">
                             @foreach($mandatorySkills as $ms)
                                 <tr><td class="py-3 font-semibold">{{ $ms->skill_name }}</td><td class="py-3 text-right text-amber-600">@for($i=0; $i<$ms->stars; $i++) ★ @endfor</td></tr>
@@ -122,15 +121,15 @@
         @if($selectedSkillId && $skillStats)
         <div class="space-y-8">
             <!-- البطاقة الكبيرة للمهارة المحددة -->
-            <div class="glass-card p-8 rounded-3xl border-l-4 border-amber-800 bg-white/50">
+            <div class="glass-card p-6 sm:p-8 rounded-3xl border-l-4 border-amber-800 bg-white/50">
                 <div class="flex items-center gap-3 mb-4">
                     <span class="text-3xl">🛠️</span>
-                    <h2 class="text-3xl font-serif italic font-bold text-[#4a0404]">{{ $skillStats['name'] }}</h2>
+                    <h2 class="text-2xl sm:text-3xl font-serif italic font-bold text-[#4a0404]">{{ $skillStats['name'] }}</h2>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mt-6 text-xs">
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 mt-6 text-xs">
                     <div>
                         <p class="opacity-50 font-bold uppercase tracking-widest">Jobs requiring this skill</p>
-                        <p class="text-2xl font-serif font-bold mt-1">{{ $skillStats['count'] }} offres</p>
+                        <p class="text-xl sm:text-2xl font-serif font-bold mt-1">{{ $skillStats['count'] }} offres</p>
                     </div>
                     <div>
                         <p class="opacity-50 font-bold uppercase tracking-widest">Demand Score</p>
