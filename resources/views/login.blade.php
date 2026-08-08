@@ -38,15 +38,13 @@
 </head>
 <body class="relative min-h-screen flex items-center justify-center p-4 md:p-8 m-0 overflow-x-hidden">
 
-    <!-- الصورة ديال الخلفية -->
+
     <div class="fixed inset-0 bg-cover bg-center bg-no-repeat z-[-2]" 
          style="background-image: url('{{ asset('images/background.jpg') }}');">
     </div>
     
-    <!-- الطبقة اللي كتعطي التأثير (Overlay) -->
     <div class="fixed inset-0 bg-[#EBE3D7]/70 z-[-1]"></div>
 
-    <!-- الحاوية الرئيسية -->
     <div class="glass-panel w-full max-w-5xl rounded-[40px] shadow-2xl overflow-hidden p-6 md:p-12 relative z-10" x-data="{ show: false, mode: 'login' }">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             
