@@ -10,9 +10,12 @@ class SkillController extends Controller
 {
     public function index(Request $request)
     {
-        $skills = Skill::orderBy('skill_name', 'asc')->get();
+        $skills = Skill::orderBy('skill_name', 'asc')->get()->map(function ($skill) {
+            $skill->skill_name = trim($skill->skill_name, " '\"[]");
+            return $skill;
+        });
        $defaultSkill = $skills->firstWhere('skill_name', "'Java'") ?? $skills->first();
-$selectedSkillId = $request->input('skill_id', $defaultSkill?->id_skill);
+    $selectedSkillId = $request->input('skill_id', $defaultSkill?->id_skill);
 
         $skillDetails = null;
         $jobsCount = 0;
@@ -64,13 +67,17 @@ $selectedSkillId = $request->input('skill_id', $defaultSkill?->id_skill);
                     ->pluck('id_job');
 
                 if ($jobIdsWithSkill->isNotEmpty()) {
-                    $similarSkills = DB::table('job_skill')
-                        ->join('skills', 'job_skill.id_skill', '=', 'skills.id_skill')
-                        ->select('skills.skill_name', DB::raw('count(*) as total'))
-                        ->whereIn('job_skill.id_job', $jobIdsWithSkill)
-                        ->where('job_skill.id_skill', '!=', $selectedSkillId) // حيد المهارة الحالية
-                        ->groupBy('skills.id_skill', 'skills.skill_name')
-                        ->orderBy('total', 'desc')->take(5)->get();
+                     $similarSkills = DB::table('job_skill')
+                     ->join('skills', 'job_skill.id_skill', '=', 'skills.id_skill')
+                     ->select('skills.skill_name', DB::raw('count(*) as total'))
+                     ->whereIn('job_skill.id_job', $jobIdsWithSkill)
+                     ->where('job_skill.id_skill', '!=', $selectedSkillId)
+                     ->groupBy('skills.id_skill', 'skills.skill_name')
+                     ->orderBy('total', 'desc')->take(5)->get()
+                     ->map(function ($item) {
+                         $item->skill_name = trim($item->skill_name, " '\"[]");
+                         return $item;
+                     });
                 }
             }
         }
