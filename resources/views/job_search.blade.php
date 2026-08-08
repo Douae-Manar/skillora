@@ -180,7 +180,8 @@
                 job.skills.forEach(skill => {
                     const span = document.createElement('span');
                     span.className = 'text-xs px-2.5 py-1 bg-[#4a0404] text-[#e8e3dc] rounded-full';
-                    span.innerText = skill.skill_name;
+                    let cleanSkillName = skill.skill_name.replace(/['"\[\]]/g, '').trim();
+                    span.innerText = cleanSkillName;
                     skillsContainer.appendChild(span);
                 });
             } else {

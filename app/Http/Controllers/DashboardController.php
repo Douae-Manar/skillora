@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\JobOffer;
 use App\Models\Domain;
 use App\Models\Skill;
-use Illuminate\Support\Facades\DB;
+use DB;
 
 class DashboardController extends Controller
 {
@@ -33,7 +33,7 @@ class DashboardController extends Controller
             ->take(7)
             ->get();
 
-        // 4. تنوع المهن داخل كل قطاع
+        // 4. [فكرة 1] تنوع المهن داخل كل قطاع (Top Domains by Diversity)
         $diversityData = JobOffer::join('domains', 'job_offers.id_domain', '=', 'domains.id_domain')
             ->select('domains.domain_name', DB::raw('COUNT(DISTINCT job_offers.title) as unique_titles'))
             ->groupBy('domains.id_domain', 'domains.domain_name')
@@ -41,27 +41,27 @@ class DashboardController extends Controller
             ->take(4)
             ->get();
 
-        // 5. [تصحيح] المهارة الأكثر طلباً في كل قطاع بشكل دقيق لكل قطاع على حدة
+        // 5. [فكرة 2] المهارة الأكثر طلباً في كل قطاع (Top Skill per Domain)
         $skillsPerDomain = DB::select("
-            SELECT d.domain_name, s.skill_name, COUNT(js.id_job) as total
-            FROM domains d
-            JOIN job_offers j ON d.id_domain = j.id_domain
+            SELECT d.domain_name, s.skill_name, COUNT(*) as total
+            FROM job_offers j
+            JOIN domains d ON j.id_domain = d.id_domain
             JOIN job_skill js ON j.id_job = js.id_job
             JOIN skills s ON js.id_skill = s.id_skill
-            GROUP BY d.id_domain, d.domain_name, s.id_skill, s.skill_name
-            HAVING (d.id_domain, COUNT(js.id_job)) IN (
-                SELECT id_dom, MAX(cnt) FROM (
-                    SELECT d2.id_domain as id_dom, s2.id_skill, COUNT(js2.id_job) as cnt
-                    FROM domains d2
-                    JOIN job_offers j2 ON d2.id_domain = j2.id_domain
+            WHERE (j.id_domain, s.id_skill) IN (
+                SELECT id_domain, id_skill FROM (
+                    SELECT j2.id_domain, js2.id_skill, COUNT(*) as cnt,
+                           ROW_NUMBER() OVER (PARTITION BY j2.id_domain ORDER BY COUNT(*) DESC) as rn
+                    FROM job_offers j2
                     JOIN job_skill js2 ON j2.id_job = js2.id_job
-                    GROUP BY d2.id_domain, s2.id_skill
-                ) t GROUP BY id_dom
+                    GROUP BY j2.id_domain, js2.id_skill
+                ) tmp WHERE rn = 1
             )
+            GROUP BY d.id_domain, d.domain_name, s.id_skill, s.skill_name
             LIMIT 4
         ");
 
-        // 6. عينات عشوائية لأحدث العروض
+        // 6. [فكرة 3] عينات عشوائية لأحدث العروض (Latest Offers Preview)
         $latestOffers = JobOffer::with('domain')
             ->orderBy('id_job', 'desc')
             ->take(4)
